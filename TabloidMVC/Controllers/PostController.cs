@@ -93,10 +93,44 @@ namespace TabloidMVC.Controllers
             }
         }
 
+        public IActionResult UserPosts()
+        {
+            int userProfileId = GetCurrentUserProfileId();
+            var posts = _postRepository.GetAllCurrentUserPosts(userProfileId);
+
+            return View(posts);
+        }
+
         private int GetCurrentUserProfileId()
         {
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return int.Parse(id);
+        }
+        public IActionResult Edit(int id)
+        {
+            Post post = _postRepository.GetPublishedPostById(id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            return View(post);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Post post)
+        {
+            try
+            {
+                _postRepository.UpdatePost(post);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View(post);
+            }
         }
     }
 }

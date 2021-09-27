@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TabloidMVC.Controllers;
 using TabloidMVC.Models;
 
 namespace TabloidMVC.Repositories
@@ -9,6 +10,9 @@ namespace TabloidMVC.Repositories
         List<Post> GetAllPublishedPosts();
         Post GetPublishedPostById(int id);
         Post GetUserPostById(int id, int userProfileId);
+        void UpdatePost(Post post);
         void DeletePost(int postId);
+
+        List<Post> GetAllCurrentUserPosts(int userProfileId);
     }
 }

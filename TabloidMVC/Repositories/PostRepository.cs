@@ -6,6 +6,13 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
 using TabloidMVC.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
+using System.Security.Claims;
+using TabloidMVC.Models.ViewModels;
+using TabloidMVC.Repositories;
+
 
 namespace TabloidMVC.Repositories
 {
@@ -167,6 +174,7 @@ namespace TabloidMVC.Repositories
             return new Post()
             {
                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
                 Title = reader.GetString(reader.GetOrdinal("Title")),
                 Content = reader.GetString(reader.GetOrdinal("Content")),
                 ImageLocation = DbUtils.GetNullableString(reader, "HeaderImage"),
@@ -197,7 +205,7 @@ namespace TabloidMVC.Repositories
                 }
             };
         }
-        public void DeletePost(int postId)
+        public void UpdatePost(Post post)
         {
             using (SqlConnection conn = Connection)
             {
@@ -206,13 +214,85 @@ namespace TabloidMVC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
+                            UPDATE Post
+                            SET  
+                                Title = @title, 
+                                ImageLocation = @imageLocation, 
+                                PublishDateTime = @publishDateTime, 
+                                Content = @content,
+                                CreateDateTime = @createDateTime,
+                                IsApproved = @isApproved,
+                                CategoryId = @categoryId,
+                                UserProfileId = @userProfileId
+                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@title", post.Title);
+                    cmd.Parameters.AddWithValue("@imageLocation", post.ImageLocation);
+                    cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime);
+                    cmd.Parameters.AddWithValue("@content", post.Content);
+                    cmd.Parameters.AddWithValue("@createDateTime", post.CreateDateTime);
+                    cmd.Parameters.AddWithValue("@isApproved", post.IsApproved);
+                    cmd.Parameters.AddWithValue("@categoryId", post.CategoryId);
+                    cmd.Parameters.AddWithValue("@userProfileId", post.UserProfileId);
+                    cmd.Parameters.AddWithValue("@id", post.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void DeletePost(int postId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
                             DELETE FROM Post
                             WHERE Id = @id
                         ";
-
                     cmd.Parameters.AddWithValue("@id", postId);
-
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public List<Post> GetAllCurrentUserPosts(int userProfileId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT p.Id, p.Title, p.Content, 
+                              p.ImageLocation AS HeaderImage,
+                              p.CreateDateTime, p.PublishDateTime, p.IsApproved,
+                              p.CategoryId, p.UserProfileId,
+                              c.[Name] AS CategoryName,
+                              u.FirstName, u.LastName, u.DisplayName, 
+                              u.Email, u.CreateDateTime, u.ImageLocation AS AvatarImage,
+                              u.UserTypeId, 
+                              ut.[Name] AS UserTypeName
+                         FROM Post p
+                              LEFT JOIN Category c ON p.CategoryId = c.id
+                              LEFT JOIN UserProfile u ON p.UserProfileId = u.id
+                              LEFT JOIN UserType ut ON u.UserTypeId = ut.id
+                        WHERE PublishDateTime < SYSDATETIME() AND p.UserProfileId = @userProfileId
+                        ORDER BY p.CreateDateTime DESC;";
+
+                    cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
+                    var reader = cmd.ExecuteReader();
+
+                    var posts = new List<Post>();
+
+                    while (reader.Read())
+                    {
+                        posts.Add(NewPostFromReader(reader));
+                    }
+
+                    reader.Close();
+
+                    return posts;
                 }
             }
         }
