@@ -167,6 +167,7 @@ namespace TabloidMVC.Repositories
             return new Post()
             {
                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
                 Title = reader.GetString(reader.GetOrdinal("Title")),
                 Content = reader.GetString(reader.GetOrdinal("Content")),
                 ImageLocation = DbUtils.GetNullableString(reader, "HeaderImage"),
@@ -196,6 +197,41 @@ namespace TabloidMVC.Repositories
                     }
                 }
             };
+        }
+        public void UpdatePost(Post post)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE Post
+                            SET  
+                                Title = @title, 
+                                ImageLocation = @imageLocation, 
+                                PublishDateTime = @publishDateTime, 
+                                Content = @content,
+                                CreateDateTime = @createDateTime,
+                                IsApproved = @isApproved,
+                                CategoryId = @categoryId,
+                                UserProfileId = @userProfileId
+                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@title", post.Title);
+                    cmd.Parameters.AddWithValue("@imageLocation", post.ImageLocation);
+                    cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime);
+                    cmd.Parameters.AddWithValue("@content", post.Content);
+                    cmd.Parameters.AddWithValue("@createDateTime", post.CreateDateTime);
+                    cmd.Parameters.AddWithValue("@isApproved", post.IsApproved);
+                    cmd.Parameters.AddWithValue("@categoryId", post.CategoryId);
+                    cmd.Parameters.AddWithValue("@userProfileId", post.UserProfileId);
+                    cmd.Parameters.AddWithValue("@id", post.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }
