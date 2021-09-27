@@ -229,6 +229,24 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@userProfileId", post.UserProfileId);
                     cmd.Parameters.AddWithValue("@id", post.Id);
 
+                    cmd.Parameters.AddWithValue("@id", postId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void DeletePost(int postId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM Post
+                            WHERE Id = @id
+                        ";
+                    cmd.Parameters.AddWithValue("@id", postId);
                     cmd.ExecuteNonQuery();
                 }
             }
