@@ -14,7 +14,7 @@ namespace TabloidMVC.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT id, name FROM Category ORDER BY name";
+                    cmd.CommandText = "SELECT id, Name FROM Category ORDER BY name";
                     var reader = cmd.ExecuteReader();
 
                     var categories = new List<Category>();
@@ -24,13 +24,50 @@ namespace TabloidMVC.Repositories
                         categories.Add(new Category()
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Name = reader.GetString(reader.GetOrdinal("name")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
                         });
                     }
 
                     reader.Close();
 
                     return categories;
+                }
+            }
+        }
+
+        public Category GetCategoryById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT Id, Name
+                       FROM Category
+                       WHERE Category.id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+                    var reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        Category category = new Category
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name"))
+                        };
+
+
+                        reader.Close();
+                        return category;
+                    }
+                    else
+                    {
+                        reader.Close();
+                        return null;
+                    }
+
                 }
             }
         }
@@ -57,7 +94,7 @@ namespace TabloidMVC.Repositories
             }
         }
 
-        public void UpdateCategory(Category category)
+        public void Update(Category category)
         {
             using (var conn = Connection)
             {
@@ -68,16 +105,17 @@ namespace TabloidMVC.Repositories
                     cmd.CommandText = @"
                             UPDATE Category
                             SET 
-                                [Name] = @name, 
-                            WHERE Category.Id = @id";
+                                [Name] = @name 
+                            WHERE Id = @id";
 
                     cmd.Parameters.AddWithValue("@name", category.Name);
+                    cmd.Parameters.AddWithValue("@id", category.Id);
                     cmd.ExecuteNonQuery();
                 }
             }
         }
 
-        public void DeleteCategory(int categoryId)
+        public void Delete(int categoryId)
         {
             using (var conn = Connection)
             {
