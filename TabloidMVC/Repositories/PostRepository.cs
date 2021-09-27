@@ -229,8 +229,6 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@userProfileId", post.UserProfileId);
                     cmd.Parameters.AddWithValue("@id", post.Id);
 
-                    cmd.Parameters.AddWithValue("@id", postId);
-
                     cmd.ExecuteNonQuery();
                 }
             }
