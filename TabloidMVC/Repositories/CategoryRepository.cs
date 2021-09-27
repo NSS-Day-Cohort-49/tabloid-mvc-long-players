@@ -14,7 +14,7 @@ namespace TabloidMVC.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT id, name FROM Category";
+                    cmd.CommandText = "SELECT id, name FROM Category ORDER BY name";
                     var reader = cmd.ExecuteReader();
 
                     var categories = new List<Category>();
@@ -31,6 +31,68 @@ namespace TabloidMVC.Repositories
                     reader.Close();
 
                     return categories;
+                }
+            }
+        }
+
+        public void Add(Category category)
+        {
+            using(var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Category (Name)
+                        OUTPUT INSERTED.ID
+                        VALUES (@name);
+                        ";
+
+                    cmd.Parameters.AddWithValue("@name", category.Name);
+                    ;
+
+                    int id = (int)cmd.ExecuteScalar();
+                    category.Id = id;
+                }
+            }
+        }
+
+        public void UpdateCategory(Category category)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE Category
+                            SET 
+                                [Name] = @name, 
+                            WHERE Category.Id = @id";
+
+                    cmd.Parameters.AddWithValue("@name", category.Name);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteCategory(int categoryId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM Category
+                            WHERE Id = @id
+                        ";
+
+                    cmd.Parameters.AddWithValue("@id", categoryId);
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
