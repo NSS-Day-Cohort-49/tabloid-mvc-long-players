@@ -151,5 +151,90 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+
+        public void Update(UserProfile userProfile)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE UserProfile
+                            SET 
+                                Email = @Email, 
+                                FirstName = @firstName, 
+                                LastName = @lastName, 
+                                DisplayName = @displayName,
+                                ImageLocation = @imageLocation,
+                                UserTypeId = @userTypeId
+                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@email", userProfile.Email);
+                    cmd.Parameters.AddWithValue("@firstName", userProfile.FirstName);
+                    cmd.Parameters.AddWithValue("@lastName", userProfile.LastName);
+                    cmd.Parameters.AddWithValue("@displayName", userProfile.DisplayName);
+                    cmd.Parameters.AddWithValue("@imageLocation", userProfile.ImageLocation);
+                    
+                    
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void UpdateStatus(UserProfile userProfile)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE UserProfile
+                            SET 
+                                Email = @Email, 
+                                FirstName = @firstName, 
+                                LastName = @lastName, 
+                                DisplayName = @displayName,
+                                ImageLocation = @imageLocation,
+                                UserTypeId = 3
+                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@email", userProfile.Email);
+                    cmd.Parameters.AddWithValue("@firstName", userProfile.FirstName);
+                    cmd.Parameters.AddWithValue("@lastName", userProfile.LastName);
+                    cmd.Parameters.AddWithValue("@displayName", userProfile.DisplayName);
+                    cmd.Parameters.AddWithValue("@imageLocation", userProfile.ImageLocation);
+                    cmd.Parameters.AddWithValue("@userTypeId", userProfile.UserTypeId);
+
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void Delete(int userProfileId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM UserProfile
+                            WHERE Id = @id
+                        ";
+
+                    cmd.Parameters.AddWithValue("@id", userProfileId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }

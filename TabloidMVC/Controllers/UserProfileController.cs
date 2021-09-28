@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.VisualBasic;
+using System.Security.Claims;
+using TabloidMVC.Models.ViewModels;
+using TabloidMVC.Repositories;
+using System;
 using System.Collections.Generic;
 using TabloidMVC.Models;
-using TabloidMVC.Repositories;
+
 
 namespace TabloidMVC.Controllers
 {
@@ -30,6 +35,54 @@ namespace TabloidMVC.Controllers
                 return NotFound();
             }
             return View(userProfile);
+        }
+
+        public IActionResult Deactivate(int id)
+        {
+            UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
+
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+
+            return View(userProfile);
+        }
+
+        [HttpPost]
+        public IActionResult Deactivate(int id, UserProfile userProfile)
+        {
+            try
+            {
+                _userProfileRepository.UpdateStatus(userProfile);
+                return RedirectToAction("Index");
+            }
+            catch 
+            {
+                return View(userProfile);
+            }
+        }
+
+        public ActionResult Delete(int id)
+        {
+            UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
+
+            return View(userProfile);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id, UserProfile userProfile)
+        {
+            try
+            {
+                _userProfileRepository.Delete(id);
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View(userProfile);
+            }
         }
     }
 }
