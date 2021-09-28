@@ -12,7 +12,7 @@ namespace TabloidMVC.Repositories
         //void Add(UserProfile userProfile);
         void Update(UserProfile userProfile);
         void UpdateStatus(UserProfile userProfile);
-        void Delete(UserProfile userProfile);
+        void Delete(int userProfileId);
 
     }
 }
