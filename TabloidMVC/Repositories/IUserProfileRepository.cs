@@ -1,10 +1,17 @@
 ﻿using TabloidMVC.Models;
+using System.Collections.Generic;
 
 namespace TabloidMVC.Repositories
 {
     public interface IUserProfileRepository
     {
+
+        List<UserProfile> GetAll();
         UserProfile GetByEmail(string email);
-        void Add(UserProfile userProfile);
+        UserProfile GetUserProfileById(int Id);
+        //void Add(UserProfile userProfile);
+        //void Update(UserProfile userProfile);
+        //void Delete(UserProfile userProfile);
+
     }
 }
