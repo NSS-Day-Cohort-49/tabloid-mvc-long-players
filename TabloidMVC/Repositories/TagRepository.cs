@@ -1,6 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Reflection.PortableExecutable;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
+using TabloidMVC.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
+using System.Security.Claims;
+using TabloidMVC.Models.ViewModels;
+using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Repositories
 {
@@ -132,6 +143,42 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@id", tagId);
 
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public List<Tag> GetTagsbyPostId(int postId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                                        SELECT t.Name, t.Id as TId
+                                        FROM PostTag pt
+                                        INNER JOIN Tag t ON pt.TagId = t.Id
+                                        WHERE pt.PostId = @postId;";
+
+                    cmd.Parameters.AddWithValue("@postId", postId);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    List<Tag> tags = new List<Tag>();
+
+
+                    while (reader.Read())
+                    {
+
+                        Tag tag = new Tag()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("TId")),
+                            Name = reader.GetString(reader.GetOrdinal("Name"))
+                        };
+                        tags.Add(tag);
+                    }
+                    reader.Close();
+                    return tags;
                 }
             }
         }
