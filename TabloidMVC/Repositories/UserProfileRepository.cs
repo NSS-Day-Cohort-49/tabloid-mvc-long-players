@@ -185,7 +185,7 @@ namespace TabloidMVC.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            UPDATE userProfile
+                            UPDATE UserProfile
                             SET 
                                 DisplayName = @displayName,
                                 FirstName = @firstName,
@@ -203,6 +203,8 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@email", userProfile.Email);
                     cmd.Parameters.AddWithValue("@imageLocation", DbUtils.ValueOrDBNull(userProfile.ImageLocation));
                     cmd.Parameters.AddWithValue("@userIdType", userProfile.UserTypeId);
+                    cmd.Parameters.AddWithValue("@id", userProfile.Id);
+
                     cmd.ExecuteNonQuery();
                 }
             }
