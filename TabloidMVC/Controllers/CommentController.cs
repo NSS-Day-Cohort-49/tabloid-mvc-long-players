@@ -46,10 +46,12 @@ namespace TabloidMVC.Controllers
             return View(comment);
         }
 
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-            var vm = new CommentCreateViewModel();
-            return View(vm);
+            Comment comment = new Comment();
+            comment.PostId = id;
+            comment.UserProfileID = GetCurrentUserProfileId();
+            return View(comment);
         }
 
         [HttpPost]
