@@ -23,10 +23,12 @@ namespace TabloidMVC.Controllers
             _postRepository = postRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
-            var comments = _commentRepository.GetAllPublishedComments();
-            return View(comments);
+            CommentViewModel vm = new CommentViewModel();
+            vm.CommentList = _commentRepository.GetCommentByPostId(id);
+            vm.PostId = id;
+            return View(vm);
         }
 
         public IActionResult Details(int id)
@@ -69,7 +71,7 @@ namespace TabloidMVC.Controllers
         }
         public IActionResult Delete(int id)
         {
-            Comment comment = _commentRepository.GetCommentByPostId(id);
+            List<Comment> comment = _commentRepository.GetCommentByPostId(id);
 
             return View(comment);
         }
@@ -105,7 +107,8 @@ namespace TabloidMVC.Controllers
         }
         public IActionResult Edit(int id)
         {
-            Comment comment = _commentRepository.GetAllPublishedComments(id);
+            int userProfileId = GetCurrentUserProfileId();
+            List<Comment> comment = _commentRepository.GetUserCommentById(id, userProfileId);
 
             if (comment == null)
             {
