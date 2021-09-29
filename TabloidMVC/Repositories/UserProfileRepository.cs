@@ -212,6 +212,7 @@ namespace TabloidMVC.Repositories
         }
 
         public void Delete(int userProfileId)
+        public void Add(UserProfile userProfile)
         {
             using (var conn = Connection)
             {
@@ -231,5 +232,32 @@ namespace TabloidMVC.Repositories
             }
         }
 
+
+
+              public void Add(UserProfile userProfile)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO UserProfile (DisplayName, FirstName, LastName, Email, CreateDateTime, ImageLocation, UserTypeId)
+                        OUTPUT INSERTED.ID
+                        VALUES (@DisplayName, @FirstName, @LastName, @Email, GETDATE(), @ImageLocation, 2)";
+
+                    cmd.Parameters.AddWithValue("@DisplayName", userProfile.DisplayName);
+                    cmd.Parameters.AddWithValue("@FirstName", userProfile.FirstName);
+                    cmd.Parameters.AddWithValue("@LastName", userProfile.LastName);
+                    cmd.Parameters.AddWithValue("@Email", userProfile.Email);
+                    cmd.Parameters.AddWithValue("@ImageLocation", DbUtils.ValueOrDBNull(userProfile.ImageLocation));
+                    cmd.Parameters.AddWithValue("@UserTypeId", userProfile.UserTypeId);
+                    ;
+
+                    int id = (int)cmd.ExecuteScalar();
+                    userProfile.Id = id;
+                }
+            }
+        }
     }
 }
