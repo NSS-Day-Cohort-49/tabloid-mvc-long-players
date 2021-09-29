@@ -192,6 +192,7 @@ namespace TabloidMVC.Repositories
                             WHERE Id = @id";
 
                     cmd.Parameters.AddWithValue("@userTypeId", userProfile.UserTypeId);
+                    cmd.Parameters.AddWithValue("@id", userProfile.Id);
 
                     cmd.ExecuteNonQuery();
                 }
