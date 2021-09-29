@@ -193,15 +193,10 @@ namespace TabloidMVC.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            UPDATE UserProfile
-                            SET 
-                                Email = @Email, 
-                                FirstName = @firstName, 
-                                LastName = @lastName, 
-                                DisplayName = @displayName,
-                                ImageLocation = @imageLocation,
-                                UserTypeId = 3
-                            WHERE Id = @id";
+                    UPDATE UserProfile
+                    DisplayName, FirstName, LastName, Email, ImageLocation, UserTypeId
+                    VALUES (@DisplayName, @FirstName, @LastName, @Email, @ImageLocation, 3)
+                    WHERE Id = @id";
 
                     cmd.Parameters.AddWithValue("@email", userProfile.Email);
                     cmd.Parameters.AddWithValue("@firstName", userProfile.FirstName);
