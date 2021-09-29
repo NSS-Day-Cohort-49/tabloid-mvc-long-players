@@ -1,13 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.VisualBasic;
+using System.Security.Claims;
+using TabloidMVC.Models.ViewModels;
+using TabloidMVC.Repositories;
+using System;
 using System.Collections.Generic;
 using TabloidMVC.Models;
-using TabloidMVC.Repositories;
+
 
 namespace TabloidMVC.Controllers
 {
-    public class UserProfileController :Controller
+    public class UserProfileController : Controller
     {
         private readonly IUserProfileRepository _userProfileRepository;
 
@@ -31,25 +36,46 @@ namespace TabloidMVC.Controllers
             }
             return View(userProfile);
         }
-        public IActionResult UpdateUserType(int id)
-        {
 
+        public IActionResult UpdateStatus(int id)
+        {
             UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
 
             if (userProfile == null)
             {
                 return NotFound();
             }
-            return View(userProfile);
 
+            return View(userProfile);
         }
 
         [HttpPost]
-        public IActionResult UpdateUserType(int id, UserProfile userProfile)
+        public IActionResult UpdateStatus(int id, UserProfile userProfile)
         {
             try
             {
-                _userProfileRepository.UpdateUserType(userProfile);
+                _userProfileRepository.UpdateStatus(userProfile);
+                return RedirectToAction("Index");
+            }
+            catch 
+            {
+                return View(userProfile);
+            }
+        }
+
+        public ActionResult Delete(int id)
+        {
+            UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
+
+            return View(userProfile);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id, UserProfile userProfile)
+        {
+            try
+            {
+                _userProfileRepository.Delete(id);
 
                 return RedirectToAction("Index");
             }
@@ -57,6 +83,28 @@ namespace TabloidMVC.Controllers
             {
                 return View(userProfile);
             }
+        }
+
+          [HttpPost]
+        public IActionResult UpdateUserType(int id, UserProfile userProfile)
+        {
+            try
+            {
+                _userProfileRepository.UpdateUserType(userProfile);
+
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View(userProfile);
+            }
+        }
+
+        private int GetCurrentUserProfileId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }
