@@ -39,15 +39,17 @@
     <ul class="list-group mt-4">
         Tags
         <div class="form-group">
-            <select>
-                <option value="">Select Tag</option>
+            <section class="row justify-content-left">
                 @foreach (Tag tag in Model.AllTags)
                 {
-                    <option value="tag.Id">tag.Name</option>
-                }
-            </select>
-            @Html.ActionLink("Add Tag", "AddTagToPost", new { post = Model.Post.Id, tag = 1 })
-        </div>
+                    <i class="fas fa-tag"></i>
+                    <span title="Tag" class="btn btn-outline-primary mx-1">@Html.DisplayFor(modelItem => tag.Name) </span>
+<li>
+                @Html.ActionLink("Add Tag", "AddTagToPost", new { post = Model.Post.Id, tag = tag.Id })
+            </li>
+            }
+        </section>
+</div>
         <section class="row justify-content-center">
             @foreach (Tag tag in Model.Tags)
             {
