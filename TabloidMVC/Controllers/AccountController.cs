@@ -22,6 +22,26 @@ namespace TabloidMVC.Controllers
         {
             return View();
         }
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Register(UserProfile userProfile)
+        {
+            try
+            {
+                _userProfileRepository.Add(userProfile);
+
+                return RedirectToAction("Login");
+            }
+
+            catch
+            {
+                return View(userProfile);
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> Login(Credentials credentials)
