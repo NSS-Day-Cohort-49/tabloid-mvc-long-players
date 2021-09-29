@@ -7,8 +7,10 @@ namespace TabloidMVC.Models.ViewModels
 {
     public class PostDetailViewModel
     {
-        public Post post { get; set; }
+        public Post Post { get; set; }
         public List<Tag> Tags { get; set; }
+
+        public List<Tag> AllTags { get; set; }
 
         //comments will go here, I'm assuming this is also a list
     }
