@@ -45,7 +45,7 @@ namespace TabloidMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(int id, UserProfile userProfile)
+        public IActionResult Edit(int id, UserProfile userProfile)
         {
             try
             {

@@ -196,14 +196,13 @@ namespace TabloidMVC.Repositories
                                 UserIdType = @userIdType
                             WHERE Id = @id";
 
-                    cmd.Parameters.AddWithValue("@id", userProfile.Id);
+                    //cmd.Parameters.AddWithValue("@id", userProfile.Id);
                     cmd.Parameters.AddWithValue("@displayName", userProfile.DisplayName);
                     cmd.Parameters.AddWithValue("@firstName", userProfile.FirstName);
                     cmd.Parameters.AddWithValue("@lastName", userProfile.LastName);
                     cmd.Parameters.AddWithValue("@email", userProfile.Email);
                     cmd.Parameters.AddWithValue("@imageLocation", DbUtils.ValueOrDBNull(userProfile.ImageLocation));
                     cmd.Parameters.AddWithValue("@userIdType", userProfile.UserTypeId);
-                    cmd.Parameters.AddWithValue("@id", userProfile.Id);
 
                     cmd.ExecuteNonQuery();
                 }
