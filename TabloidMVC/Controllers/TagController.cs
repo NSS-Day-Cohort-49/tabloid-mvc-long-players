@@ -23,18 +23,6 @@ namespace TabloidMVC.Controllers
             return View(tags);
         }
 
-        public IActionResult Details(int id)
-        {
-            Tag tag = _tagRepository.GetTagById(id);
-            if (tag == null)
-            {
-                return NotFound();
-            }
-            return View(tag);
-
-
-        }
-
 
         public IActionResult Create()
         {
