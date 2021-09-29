@@ -37,7 +37,7 @@ namespace TabloidMVC.Controllers
             return View(userProfile);
         }
 
-        public IActionResult Deactivate(int id)
+        public IActionResult UpdateStatus(int id)
         {
             UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
 
@@ -50,7 +50,7 @@ namespace TabloidMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Deactivate(int id, UserProfile userProfile)
+        public IActionResult UpdateStatus(int id, UserProfile userProfile)
         {
             try
             {
@@ -83,6 +83,12 @@ namespace TabloidMVC.Controllers
             {
                 return View(userProfile);
             }
+        }
+
+        private int GetCurrentUserProfileId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }
