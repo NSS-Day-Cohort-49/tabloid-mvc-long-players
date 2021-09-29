@@ -85,6 +85,22 @@ namespace TabloidMVC.Controllers
             }
         }
 
+          [HttpPost]
+        public IActionResult UpdateUserType(int id, UserProfile userProfile)
+        {
+            try
+            {
+                _userProfileRepository.UpdateUserType(userProfile);
+
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View(userProfile);
+            }
+        }
+
         private int GetCurrentUserProfileId()
         {
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);

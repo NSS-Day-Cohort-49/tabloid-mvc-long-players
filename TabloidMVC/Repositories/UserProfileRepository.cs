@@ -24,7 +24,7 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN UserType uT ON u.UserTypeId = uT.id
                          ORDER BY LastName
                        ";
-                    
+
                     var reader = cmd.ExecuteReader();
 
                     var categories = new List<UserProfile>();
@@ -256,6 +256,27 @@ namespace TabloidMVC.Repositories
 
                     int id = (int)cmd.ExecuteScalar();
                     userProfile.Id = id;
+                }
+            }
+        }
+        public void UpdateUserType(UserProfile userProfile)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    UPDATE UserProfile
+                            SET
+                                UserTypeId = 1
+                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@userTypeId", userProfile.UserTypeId);
+                    cmd.Parameters.AddWithValue("@id", userProfile.Id);
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }

@@ -14,5 +14,7 @@ namespace TabloidMVC.Repositories
         void UpdateStatus(UserProfile userProfile);
         void Delete(int userProfileId);
 
+        void UpdateUserType(UserProfile userProfile);
+        //void Delete(UserProfile userProfile);
     }
 }
