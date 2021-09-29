@@ -1,10 +1,11 @@
 ﻿using Microsoft.Data.SqlClient.Server;
 using System;
+using System.Collections;
 using System.Runtime.Intrinsics.X86;
 
 namespace TabloidMVC.Models
 {
-    public class UserProfile
+    public class UserProfile 
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

@@ -1,28 +1,24 @@
-﻿@model IEnumerable<TabloidMVC.Models.Post>
+﻿@model IEnumerable<TabloidMVC.Models.UserProfile>
 
 @{
-    ViewData["Title"] = "UserPosts";
+    ViewData["Title"] = "Index";
 }
-<div class="container pt-5">
-    <h1>UserPosts</h1>
 
-    <p>
-        <a class="btn btn-primary" asp-action="Create">New Post</a>
-    </p>
+
+<div class="container pt-5">
+    <h1>User Profiles</h1>
+
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Title)
+                    @Html.DisplayNameFor(model => model.FullName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Content)
+                    @Html.DisplayNameFor(model => model.DisplayName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.CreateDateTime)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CategoryId)
+                    @Html.DisplayNameFor(model => model.UserType)
                 </th>
                 <th></th>
             </tr>
@@ -31,17 +27,15 @@
             @foreach (var item in Model)
             {
                 <tr>
+
                     <td>
-                        @Html.DisplayFor(modelItem => item.Title)
+                        @Html.DisplayFor(modelItem => item.FullName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Content)
+                        @Html.DisplayFor(modelItem => item.DisplayName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.CreateDateTime)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Category.Name)
+                        @Html.DisplayFor(modelItem => item.UserType.Name)
                     </td>
                     <td>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary mx-1" title="View">
@@ -58,8 +52,4 @@
             }
         </tbody>
     </table>
-<<<<<<< HEAD
- </div>
-=======
 </div>
->>>>>>> main
