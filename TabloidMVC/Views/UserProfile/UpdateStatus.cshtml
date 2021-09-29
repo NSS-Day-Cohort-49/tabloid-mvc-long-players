@@ -49,13 +49,21 @@
 
                 </div>
                 <div class="form-group">
-                    <h6>User Type Id</h6>
-                    @Html.DisplayFor(modelItem => Model.UserTypeId)
+                    <h6>User Type</h6>
+                    @Html.DisplayFor(modelItem => Model.UserType.Name)
                     <input asp-for="UserTypeId" type="hidden" />
                 </div>
                 <div class="form-group">
                     <h6>User Active Status</h6>
-                    @Html.DisplayFor(modelItem => Model.UserActive)
+                    @if(Model.UserActive == 1)
+                    {
+                        <h7>Active</h7>
+                    }
+                    else
+                    {
+                        <h7>Deactivated</h7>
+
+                     }
                     <input asp-for="UserActive" type="hidden" />
                 </div>
                 <div class="form-group">
