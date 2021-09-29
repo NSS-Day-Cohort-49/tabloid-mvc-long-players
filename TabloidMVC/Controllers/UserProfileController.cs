@@ -12,7 +12,7 @@ using TabloidMVC.Models;
 
 namespace TabloidMVC.Controllers
 {
-    public class UserProfileController :Controller
+    public class UserProfileController : Controller
     {
         private readonly IUserProfileRepository _userProfileRepository;
 
