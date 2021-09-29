@@ -18,7 +18,7 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"
                        SELECT u.id, u.FirstName, u.LastName, u.DisplayName, u.Email,
-                              u.CreateDateTime, u.ImageLocation, u.UserTypeId,
+                              u.CreateDateTime, u.ImageLocation, u.UserTypeId, 
                               uT.[Name] AS UserTypeName
                          FROM UserProfile u
                               LEFT JOIN UserType uT ON u.UserTypeId = uT.id
@@ -46,6 +46,7 @@ namespace TabloidMVC.Repositories
                                 Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
                                 Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
                             },
+                            //UserActive = reader.GetInt32(reader.GetOrdinal("UserActive"))
                         });
                     }
 
@@ -92,6 +93,7 @@ namespace TabloidMVC.Repositories
                                 Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
                                 Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
                             },
+                            //UserActive = reader.GetInt32(reader.GetOrdinal("UserActive"))
                         };
                     }
 
@@ -112,6 +114,7 @@ namespace TabloidMVC.Repositories
                     cmd.CommandText = @"
                       SELECT u.id, u.FirstName, u.LastName, u.DisplayName, u.Email,
                               u.CreateDateTime, u.ImageLocation, u.UserTypeId,
+                              
                               uT.[Name] AS UserTypeName
                          FROM UserProfile u
                               LEFT JOIN UserType uT ON u.UserTypeId = uT.id
@@ -137,6 +140,7 @@ namespace TabloidMVC.Repositories
                                 Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
                                 Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
                             },
+                            //UserActive = reader.GetInt32(reader.GetOrdinal("UserActive"))
                         };
 
                         reader.Close();
@@ -194,9 +198,15 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"
                     UPDATE UserProfile
-                    DisplayName, FirstName, LastName, Email, ImageLocation, UserTypeId
-                    VALUES (@DisplayName, @FirstName, @LastName, @Email, @ImageLocation, 3)
-                    WHERE Id = @id";
+                            SET 
+                                Email = @Email, 
+                                FirstName = @firstName, 
+                                LastName = @lastName, 
+                                DisplayName = @displayName,
+                                ImageLocation = @imageLocation,
+                                UserTypeId = @userTypeId,
+                                UserActive = False
+                            WHERE Id = @id";
 
                     cmd.Parameters.AddWithValue("@email", userProfile.Email);
                     cmd.Parameters.AddWithValue("@firstName", userProfile.FirstName);
@@ -212,7 +222,6 @@ namespace TabloidMVC.Repositories
         }
 
         public void Delete(int userProfileId)
-        public void Add(UserProfile userProfile)
         {
             using (var conn = Connection)
             {
@@ -234,7 +243,7 @@ namespace TabloidMVC.Repositories
 
 
 
-              public void Add(UserProfile userProfile)
+        public void Add(UserProfile userProfile)
         {
             using (var conn = Connection)
             {
@@ -252,6 +261,7 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@Email", userProfile.Email);
                     cmd.Parameters.AddWithValue("@ImageLocation", DbUtils.ValueOrDBNull(userProfile.ImageLocation));
                     cmd.Parameters.AddWithValue("@UserTypeId", userProfile.UserTypeId);
+                    //UserActive = reader.GetInt32(reader.GetOrdinal("UserActive"))
                     ;
 
                     int id = (int)cmd.ExecuteScalar();
