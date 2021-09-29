@@ -31,7 +31,7 @@ namespace TabloidMVC.Controllers
             }
             return View(userProfile);
         }
-        public IActionResult Edit(int id)
+        public IActionResult UpdateUserType(int id)
         {
 
             UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
@@ -45,11 +45,11 @@ namespace TabloidMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, UserProfile userProfile)
+        public IActionResult UpdateUserType(int id, UserProfile userProfile)
         {
             try
             {
-                _userProfileRepository.Update(userProfile);
+                _userProfileRepository.UpdateUserType(userProfile);
 
                 return RedirectToAction("Index");
             }

@@ -24,7 +24,7 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN UserType uT ON u.UserTypeId = uT.id
                          ORDER BY LastName
                        ";
-                    
+
                     var reader = cmd.ExecuteReader();
 
                     var categories = new List<UserProfile>();
@@ -159,9 +159,9 @@ namespace TabloidMVC.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO UserProfile (DisplayName, FirstName, LastName, Email, CreateDateTime, ImageLocation, UserTypeId)
+                        INSERT INTO UserProfile (DisplayName, FirstName, LastName, Email, CreateDateTime, ImageLocation, UserTypeId, UserActive)
                         OUTPUT INSERTED.ID
-                        VALUES (@DisplayName, @FirstName, @LastName, @Email, GETDATE(), @ImageLocation, 2)";
+                        VALUES (@DisplayName, @FirstName, @LastName, @Email, GETDATE(), @ImageLocation, 2, 1)";
 
                     cmd.Parameters.AddWithValue("@DisplayName", userProfile.DisplayName);
                     cmd.Parameters.AddWithValue("@FirstName", userProfile.FirstName);
@@ -169,6 +169,7 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@Email", userProfile.Email);
                     cmd.Parameters.AddWithValue("@ImageLocation", DbUtils.ValueOrDBNull(userProfile.ImageLocation));
                     cmd.Parameters.AddWithValue("@UserTypeId", userProfile.UserTypeId);
+                    cmd.Parameters.AddWithValue("@UserActive", userProfile.UserActive);
                     ;
 
                     int id = (int)cmd.ExecuteScalar();
@@ -176,7 +177,7 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
-        public void Update(UserProfile userProfile)
+        public void UpdateUserType(UserProfile userProfile)
         {
             using (var conn = Connection)
             {
@@ -185,24 +186,12 @@ namespace TabloidMVC.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            UPDATE UserProfile
-                            SET 
-                                DisplayName = @displayName,
-                                FirstName = @firstName,
-                                LastName = @lastName,
-                                Email = @email,
-                                CreateDateTime = @createDateTime,
-                                ImageLocation = @imageLocation,
-                                UserIdType = @userIdType
+                    UPDATE UserProfile
+                            SET
+                                UserTypeId = 1
                             WHERE Id = @id";
 
-                    //cmd.Parameters.AddWithValue("@id", userProfile.Id);
-                    cmd.Parameters.AddWithValue("@displayName", userProfile.DisplayName);
-                    cmd.Parameters.AddWithValue("@firstName", userProfile.FirstName);
-                    cmd.Parameters.AddWithValue("@lastName", userProfile.LastName);
-                    cmd.Parameters.AddWithValue("@email", userProfile.Email);
-                    cmd.Parameters.AddWithValue("@imageLocation", DbUtils.ValueOrDBNull(userProfile.ImageLocation));
-                    cmd.Parameters.AddWithValue("@userIdType", userProfile.UserTypeId);
+                    cmd.Parameters.AddWithValue("@userTypeId", userProfile.UserTypeId);
 
                     cmd.ExecuteNonQuery();
                 }
