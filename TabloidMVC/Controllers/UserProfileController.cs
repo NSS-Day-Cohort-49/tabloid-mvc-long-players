@@ -176,11 +176,11 @@ namespace TabloidMVC.Controllers
                 return View(userProfile);
             }
 
-             int GetCurrentUserProfileId()
-            {
-                string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                return int.Parse(id);
-            }
+            // int GetCurrentUserProfileId()
+            //{
+            //    string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //    return int.Parse(id);
+            //}
         }
     }
 }
