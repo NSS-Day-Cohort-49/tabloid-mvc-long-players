@@ -146,7 +146,6 @@ namespace TabloidMVC.Controllers
         {
 
             _postRepository.RemoveTagFromPost(tag, post);
-            string postdirect = Convert.ToString(post);
 
             return RedirectToAction("Details", new { id = post });
 

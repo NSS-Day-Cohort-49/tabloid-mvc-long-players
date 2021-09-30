@@ -14,5 +14,8 @@ namespace TabloidMVC.Repositories
 
         List<Comment> GetAllCurrentUserComments(int userProfileId);
         public List<Comment> GetCommentByPostId(int PostId);
+
+        public Comment GetCommentById(int id);
+
     }
 }

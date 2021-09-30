@@ -46,32 +46,40 @@ namespace TabloidMVC.Controllers
             return View(comment);
         }
 
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-            var vm = new CommentCreateViewModel();
+            var vm = new CommentCreateViewModel
+            {
+                Comment = new Comment()
+            };
             return View(vm);
         }
 
         [HttpPost]
-        public IActionResult Create(CommentCreateViewModel vm)
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(int id, CommentCreateViewModel commentCreate)
         {
-            try
             {
-                vm.Comment.CreateDateTime = DateAndTime.Now;
-                vm.Comment.UserProfileId = GetCurrentUserProfileId();
-
-                _commentRepository.Add(vm.Comment);
-
-                return RedirectToAction("Details", new { id = vm.Comment.Id });
-            }
-            catch
-            {
-                return View(vm);
+                try
+                {
+                    commentCreate.Comment.UserProfileId = GetCurrentUserProfileId();
+                    commentCreate.Comment.PostId = id;
+                    _commentRepository.Add(commentCreate.Comment);
+                    return RedirectToAction("Index", new { id });
+                }
+                catch (Exception ex)
+                {
+                    var post = _postRepository.GetPublishedPostById(id);
+                    commentCreate.Post = post;
+                    return View(commentCreate);
+                }
             }
         }
+
+
         public IActionResult Delete(int id)
         {
-            List<Comment> comment = _commentRepository.GetCommentByPostId(id);
+            Comment comment = _commentRepository.GetCommentById(id);
 
             return View(comment);
         }
@@ -80,11 +88,15 @@ namespace TabloidMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id, Comment comment)
         {
+
+
+            Comment commente = _commentRepository.GetCommentById(id);
+
             try
             {
                 _commentRepository.DeleteComment(id);
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { id = commente.PostId });
             }
             catch (Exception ex)
             {
@@ -107,8 +119,7 @@ namespace TabloidMVC.Controllers
         }
         public IActionResult Edit(int id)
         {
-            int userProfileId = GetCurrentUserProfileId();
-            List<Comment> comment = _commentRepository.GetUserCommentById(id, userProfileId);
+            Comment comment = _commentRepository.GetCommentById(id);
 
             if (comment == null)
             {
@@ -122,10 +133,11 @@ namespace TabloidMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Comment comment)
         {
+            Comment commente = _commentRepository.GetCommentById(id);
             try
             {
                 _commentRepository.UpdateComment(comment);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { id = commente.PostId });
             }
             catch (Exception ex)
             {
