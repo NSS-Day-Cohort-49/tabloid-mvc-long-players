@@ -180,14 +180,14 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@lastName", userProfile.LastName);
                     cmd.Parameters.AddWithValue("@displayName", userProfile.DisplayName);
                     cmd.Parameters.AddWithValue("@imageLocation", userProfile.ImageLocation);
-                    
-                    
+
+
 
                     cmd.ExecuteNonQuery();
                 }
             }
         }
-        
+
         public void UpdateStatus(UserProfile userProfile)
         {
             using (var conn = Connection)
@@ -195,8 +195,8 @@ namespace TabloidMVC.Repositories
                 conn.Open();
 
                 using (var cmd = conn.CreateCommand())
-                
-            
+
+
                 {
                     cmd.CommandText = @"
                     UPDATE UserProfile      
@@ -312,7 +312,6 @@ namespace TabloidMVC.Repositories
         }
         public void UpdateUserTypeAuthor(UserProfile userProfile)
 
-        public List<UserProfile> NumberOfAdmins()
         {
             using (var conn = Connection)
             {
@@ -330,8 +329,19 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@id", userProfile.Id);
 
                     cmd.ExecuteNonQuery();
+
+                }
+            }
+        }
+
+        public List<UserProfile> NumberOfAdmins()
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
+
                     cmd.CommandText = @"
                       SELECT COUNT(UserTypeId) AS NumberOfAdmins
                          FROM UserProfile 

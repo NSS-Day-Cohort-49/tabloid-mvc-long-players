@@ -24,7 +24,7 @@ namespace TabloidMVC.Controllers
         public IActionResult Index()
         {
             var userProfiles = _userProfileRepository.GetAll();
-            return View(userProfiles);  
+            return View(userProfiles);
         }
 
         public IActionResult Details(int id)
@@ -36,7 +36,6 @@ namespace TabloidMVC.Controllers
             }
             return View(userProfile);
         }
-        public IActionResult UpdateUserTypeAdmin(int id)
 
         public IActionResult UpdateStatus(int id)
         {
@@ -58,7 +57,7 @@ namespace TabloidMVC.Controllers
                 _userProfileRepository.UpdateStatus(userProfile);
                 return RedirectToAction("Index");
             }
-            catch 
+            catch
             {
                 return View(userProfile);
             }
@@ -125,6 +124,17 @@ namespace TabloidMVC.Controllers
         }
 
         [HttpPost]
+        public IActionResult UpdateUserTypeAdmin(int id)
+        {
+            UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
+
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+
+            return View(userProfile);
+        }
         public IActionResult UpdateUserTypeAdmin(int id, UserProfile userProfile)
         {
             try
@@ -166,10 +176,11 @@ namespace TabloidMVC.Controllers
                 return View(userProfile);
             }
 
-        private int GetCurrentUserProfileId()
-        {
-            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return int.Parse(id);
+             int GetCurrentUserProfileId()
+            {
+                string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                return int.Parse(id);
+            }
         }
     }
 }
