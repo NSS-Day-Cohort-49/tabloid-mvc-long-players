@@ -12,5 +12,12 @@ namespace TabloidMVC.Repositories
         void Add(UserProfile userProfile);
         void UpdateUserTypeAdmin(UserProfile userProfile);
         //void Delete(UserProfile userProfile);
+        void Update(UserProfile userProfile);
+        void UpdateStatus(UserProfile userProfile);
+        void ActivateStatus(UserProfile userProfile);
+        void Delete(int userProfileId);
+
+        void UpdateUserType(UserProfile userProfile);
+      
     }
 }
