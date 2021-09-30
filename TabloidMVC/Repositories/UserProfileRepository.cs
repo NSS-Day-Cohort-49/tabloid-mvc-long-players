@@ -177,7 +177,7 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
-        public void UpdateUserType(UserProfile userProfile)
+        public void UpdateUserTypeAdmin(UserProfile userProfile)
         {
             using (var conn = Connection)
             {
