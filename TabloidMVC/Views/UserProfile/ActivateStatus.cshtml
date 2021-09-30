@@ -1,0 +1,90 @@
+﻿@model TabloidMVC.Models.UserProfile
+
+@{
+    ViewData["Title"] = "ActivateStatus";
+}
+
+<div class="container pt-5">
+    <h1>Activate</h1>
+
+    <h3>Are you sure you want to Activate the Profile for @Model.FullName?</h3>
+
+    <h4>UserProfile</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="ActivateStatus">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <h6>Id</h6>
+                    @Html.DisplayFor(modelItem => Model.Id)
+                    <input asp-for="Id" type="hidden" />
+
+                </div>
+                <div class="form-group">
+                    <h6>First Name</h6>
+                    @Html.DisplayFor(modelItem => Model.FirstName)
+                    <input asp-for="FirstName" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <h6>Last Name</h6>
+                    @Html.DisplayFor(modelItem => Model.LastName)
+                    <input asp-for="LastName" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <h6>Display Name</h6>
+                    @Html.DisplayFor(modelItem => Model.DisplayName)
+                    <input asp-for="DisplayName" type="hidden" />
+
+                </div>
+                <div class="form-group">
+                    <h6>Email</h6>
+                    @Html.DisplayFor(modelItem => Model.Email)
+                    <input asp-for="Email" type="hidden" />
+
+                </div>
+
+                <div class="form-group">
+
+                    <input asp-for="ImageLocation" type="hidden" />
+
+                </div>
+                <div class="form-group">
+                    <h6>User Type</h6>
+                    @Html.DisplayFor(modelItem => Model.UserType.Name)
+                    <input asp-for="UserTypeId" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <h6>User Active Status</h6>
+                    @if (Model.UserActive == 1)
+                    {
+                        <h7>Active</h7>
+                    }
+                    else
+                    {
+                        <h7>Deactivated</h7>
+
+                    }
+                    <input asp-for="UserActive" type="hidden" />
+                </div>
+                <div class="form-group">
+
+                    <input asp-for="FullName" type="hidden" />
+
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Yes Please" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

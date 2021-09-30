@@ -63,6 +63,32 @@ namespace TabloidMVC.Controllers
             }
         }
 
+        public IActionResult ActivateStatus(int id)
+        {
+            UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
+
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+
+            return View(userProfile);
+        }
+
+        [HttpPost]
+        public IActionResult ActivateStatus(int id, UserProfile userProfile)
+        {
+            try
+            {
+                _userProfileRepository.ActivateStatus(userProfile);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View(userProfile);
+            }
+        }
+
         public ActionResult Delete(int id)
         {
             UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
@@ -85,7 +111,19 @@ namespace TabloidMVC.Controllers
             }
         }
 
-          [HttpPost]
+        public IActionResult UpdateUserType(int id)
+        {
+            UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
+
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+
+            return View(userProfile);
+        }
+
+        [HttpPost]
         public IActionResult UpdateUserType(int id, UserProfile userProfile)
         {
             try
