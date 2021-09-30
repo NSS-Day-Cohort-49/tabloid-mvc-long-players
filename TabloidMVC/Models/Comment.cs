@@ -29,5 +29,7 @@ namespace TabloidMVC.Models
         [DisplayName("Published")]
         [DataType(DataType.Date)]
         public DateTime? CreateDateTime { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }
