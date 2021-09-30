@@ -53,9 +53,11 @@
                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-primary mx-1" title="Delete">
                             <i class="fas fa-trash"></i>
                         </a>
-
                         <a asp-action="UpdateStatus" asp-route-id="@item.Id" class="btn btn-outline-primary mx-1" title="UpdateStatus">
                             <i class="fas fa-user-times"></i>
+                        </a>
+                        <a asp-action="ActivateStatus" asp-route-id="@item.Id" class="btn btn-outline-primary mx-1" title="ActivateStatus">
+                            <i class="fas fa-user-plus"></i>
                         </a>
                     </td>
 
