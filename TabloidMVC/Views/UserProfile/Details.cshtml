@@ -12,8 +12,11 @@
         <hr />
 
         </div>
-            <a asp-action="UpdateUserType" asp-route-id="@Model.Id" class="btn btn-outline-primary mx-1" title="UpdateUserType">
-                <i class="fas fa-pencil-alt"></i>
+            <a asp-action="UpdateUserTypeAdmin" asp-route-id="@Model.Id" class="btn btn-outline-primary mx-1" title="UpdateUserTypeAdmin">
+                <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+            </a>
+                <a asp-action="UpdateUserTypeAuthor" asp-route-id="@Model.Id" class="btn btn-outline-primary mx-1" title="UpdateUserTypeAuthor">
+                    <i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
             </a>
         <div>
         <dl class="row">

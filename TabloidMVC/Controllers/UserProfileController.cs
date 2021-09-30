@@ -24,7 +24,7 @@ namespace TabloidMVC.Controllers
         public IActionResult Index()
         {
             var userProfiles = _userProfileRepository.GetAll();
-            return View(userProfiles);  
+            return View(userProfiles);
         }
 
         public IActionResult Details(int id)
@@ -57,7 +57,7 @@ namespace TabloidMVC.Controllers
                 _userProfileRepository.UpdateStatus(userProfile);
                 return RedirectToAction("Index");
             }
-            catch 
+            catch
             {
                 return View(userProfile);
             }
@@ -124,11 +124,22 @@ namespace TabloidMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateUserType(int id, UserProfile userProfile)
+        public IActionResult UpdateUserTypeAdmin(int id)
+        {
+            UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
+
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+
+            return View(userProfile);
+        }
+        public IActionResult UpdateUserTypeAdmin(int id, UserProfile userProfile)
         {
             try
             {
-                _userProfileRepository.UpdateUserType(userProfile);
+                _userProfileRepository.UpdateUserTypeAdmin(userProfile);
 
 
                 return RedirectToAction("Index");
@@ -138,11 +149,38 @@ namespace TabloidMVC.Controllers
                 return View(userProfile);
             }
         }
-
-        private int GetCurrentUserProfileId()
+        public IActionResult UpdateUserTypeAuthor(int id)
         {
-            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return int.Parse(id);
+
+            UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
+
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+            return View(userProfile);
+
+        }
+
+        [HttpPost]
+        public IActionResult UpdateUserTypeAuthor(int id, UserProfile userProfile)
+        {
+            try
+            {
+                _userProfileRepository.UpdateUserTypeAuthor(userProfile);
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View(userProfile);
+            }
+
+            // int GetCurrentUserProfileId()
+            //{
+            //    string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //    return int.Parse(id);
+            //}
         }
     }
 }
