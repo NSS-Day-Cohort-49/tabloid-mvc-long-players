@@ -58,5 +58,32 @@ namespace TabloidMVC.Controllers
                 return View(userProfile);
             }
         }
+        public IActionResult UpdateUserTypeAuthor(int id)
+        {
+
+            UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
+
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+            return View(userProfile);
+
+        }
+
+        [HttpPost]
+        public IActionResult UpdateUserTypeAuthor(int id, UserProfile userProfile)
+        {
+            try
+            {
+                _userProfileRepository.UpdateUserTypeAuthor(userProfile);
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View(userProfile);
+            }
+        }
     }
 }
