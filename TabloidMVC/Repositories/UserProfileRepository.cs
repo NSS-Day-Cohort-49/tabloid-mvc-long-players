@@ -2,7 +2,7 @@
 using TabloidMVC.Models;
 using TabloidMVC.Utils;
 using System.Collections.Generic;
-
+using System;
 namespace TabloidMVC.Repositories
 {
     public class UserProfileRepository : BaseRepository, IUserProfileRepository
@@ -187,7 +187,7 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
-
+        
         public void UpdateStatus(UserProfile userProfile)
         {
             using (var conn = Connection)
@@ -195,9 +195,11 @@ namespace TabloidMVC.Repositories
                 conn.Open();
 
                 using (var cmd = conn.CreateCommand())
+                
+            
                 {
                     cmd.CommandText = @"
-                    UPDATE UserProfile
+                    UPDATE UserProfile      
                             SET 
                                 UserActive = 2
                             WHERE Id = @id";
@@ -211,6 +213,34 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+
+        public void ActivateStatus(UserProfile userProfile)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+
+
+                {
+                    cmd.CommandText = @"
+                    UPDATE UserProfile      
+                            SET 
+                                UserActive = 1
+                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", userProfile.Id);
+                    cmd.Parameters.AddWithValue("@userActive", userProfile.UserActive);
+
+
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
 
         public void Delete(int userProfileId)
         {
@@ -277,6 +307,53 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@id", userProfile.Id);
 
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public List<UserProfile> NumberOfAdmins()
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                      SELECT COUNT(UserTypeId) AS NumberOfAdmins
+                         FROM UserProfile 
+                              LEFT JOIN UserType uT ON UserProfile.UserTypeId = uT.id
+                         WHERE UserTypeId = 1
+                       ";
+
+                    var reader = cmd.ExecuteReader();
+
+                    var categories = new List<UserProfile>();
+
+                    while (reader.Read())
+                    {
+                        categories.Add(new UserProfile()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Email = reader.GetString(reader.GetOrdinal("Email")),
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                            DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            ImageLocation = DbUtils.GetNullableString(reader, "ImageLocation"),
+                            UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                            UserType = new UserType()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                                Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
+                            },
+                            UserActive = reader.GetInt32(reader.GetOrdinal("UserActive")),
+                            NumberOfAdmins = reader.GetInt32(reader.GetOrdinal("UserTypeId"))
+                        });
+                    }
+
+                    reader.Close();
+
+                    return categories;
                 }
             }
         }
