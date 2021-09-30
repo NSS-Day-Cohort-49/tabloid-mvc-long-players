@@ -119,8 +119,7 @@ namespace TabloidMVC.Controllers
         }
         public IActionResult Edit(int id)
         {
-            int userProfileId = GetCurrentUserProfileId();
-            List<Comment> comment = _commentRepository.GetUserCommentById(id, userProfileId);
+            Comment comment = _commentRepository.GetCommentById(id);
 
             if (comment == null)
             {
@@ -134,10 +133,11 @@ namespace TabloidMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Comment comment)
         {
+            Comment commente = _commentRepository.GetCommentById(id);
             try
             {
                 _commentRepository.UpdateComment(comment);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { id = commente.PostId });
             }
             catch (Exception ex)
             {
