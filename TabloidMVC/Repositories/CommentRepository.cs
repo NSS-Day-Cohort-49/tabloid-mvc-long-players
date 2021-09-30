@@ -68,9 +68,10 @@ namespace TabloidMVC.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT c.Id, c.PostId, c.UserProfileId, c.Subject, C.Content, C.CreateDateTime
+                       SELECT c.Id, c.PostId, c.UserProfileId, c.Subject, C.Content, C.CreateDateTime, u.FirstName, u.LastName
                        FROM Comment c
                        INNER JOIN Post p ON p.Id = c.PostId
+                       INNER JOIN UserProfile u ON u.Id = p.UserProfileId
                        WHERE c.PostId = @id";
 
                     cmd.Parameters.AddWithValue("@id", PostId);
@@ -88,6 +89,10 @@ namespace TabloidMVC.Repositories
                             Subject = DbUtils.GetNullableString(reader, "Subject"),
                             Content = reader.GetString(reader.GetOrdinal("Content")),
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("LastName"))
+
+
                         };
 
                         comments.Add(comment);
@@ -111,7 +116,7 @@ namespace TabloidMVC.Repositories
                     cmd.CommandText = @"
                        SELECT c.Id, c.PostId, c.UserProfileId, c.Subject, C.Content, C.CreateDateTime
                        FROM Comment c
-                       INNER JOIN UserProfile ON u.Id = u.PostId
+                       INNER JOIN UserProfile u ON u.Id = u.PostId
                        WHERE c.PostId = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
@@ -153,18 +158,16 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"
                         INSERT INTO Comment (
-                            Id, PostId, UserProfileId, Subject, Content,
+                            PostId, UserProfileId, Subject, Content,
                             CreateDateTime )
                         OUTPUT INSERTED.ID
                         VALUES (
-                            @Id, @PostId, @UserProfileId, @Subject, @Content,
-                            @CreateDateTime )";
-                    cmd.Parameters.AddWithValue("@Id", comment.Id);
+                            @PostId, @UserProfileId, @Subject, @Content,
+                            GETDATE() )";
                     cmd.Parameters.AddWithValue("@PostId", comment.PostId);
                     cmd.Parameters.AddWithValue("@UserProfileId", comment.UserProfileId);
-                    cmd.Parameters.AddWithValue("@Subject", DbUtils.ValueOrDBNull(comment.Subject));
+                    cmd.Parameters.AddWithValue("@Subject", (comment.Subject));
                     cmd.Parameters.AddWithValue("@Content", comment.Content);
-                    cmd.Parameters.AddWithValue("@CreateDateTime", comment.CreateDateTime);
 
                     comment.Id = (int)cmd.ExecuteScalar();
                 }
@@ -262,6 +265,45 @@ namespace TabloidMVC.Repositories
                     reader.Close();
 
                     return comments;
+                }
+            }
+        }
+        public Comment GetCommentById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT c.Id, c.PostId, c.UserProfileId, c.Subject, C.Content, C.CreateDateTime
+                       FROM Comment c
+                       WHERE c.Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+                    var reader = cmd.ExecuteReader();
+
+                    List<Comment> comments = new List<Comment>();
+
+                    if (reader.Read())
+                    {
+                        Comment comment = new Comment
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            PostId = reader.GetInt32(reader.GetOrdinal("PostId")),
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
+                            Subject = DbUtils.GetNullableString(reader, "Subject"),
+                            Content = reader.GetString(reader.GetOrdinal("Content")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                        };
+
+                        reader.Close();
+                        return comment;
+
+                    }
+
+                    reader.Close();
+                    return null;
                 }
             }
         }
