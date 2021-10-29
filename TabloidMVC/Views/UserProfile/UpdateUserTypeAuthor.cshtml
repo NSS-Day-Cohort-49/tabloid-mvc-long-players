@@ -7,6 +7,8 @@
 
     <h1>Demote an Admin to Author</h1>
 
+    @if (Model.NumberOfAdmins <= 2)
+    {
     <h3>Are you sure you want to demote this Admin to Author?</h3>
     <hr />
     <div class="row">
@@ -20,6 +22,11 @@
         </div>
     </div>
 
+    }
+     else
+      {
+        <h3>Must maintain at least 1 Admin</h3>
+      }
     <div>
         <a asp-action="Index">Back to List</a>
     </div>

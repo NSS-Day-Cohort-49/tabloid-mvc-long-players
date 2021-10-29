@@ -111,17 +111,7 @@ namespace TabloidMVC.Controllers
             }
         }
 
-        public IActionResult UpdateUserType(int id)
-        {
-            UserProfile userProfile = _userProfileRepository.GetUserProfileById(id);
-
-            if (userProfile == null)
-            {
-                return NotFound();
-            }
-
-            return View(userProfile);
-        }
+      
 
         [HttpPost]
         public IActionResult UpdateUserTypeAdmin(int id)
@@ -176,11 +166,12 @@ namespace TabloidMVC.Controllers
                 return View(userProfile);
             }
 
+        }
             // int GetCurrentUserProfileId()
             //{
             //    string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             //    return int.Parse(id);
             //}
-        }
+         
     }
 }
